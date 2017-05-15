@@ -1,11 +1,15 @@
 import React from "react"
+import Item from '../Item/Item'
 
 class TodoList extends React.Component{
+  constructor(){
+    super()
+  }
+
   render(){
     return(
       <div>
-        <p>Item 1</p>
-        <button>delete</button>
+        {Object.keys(this.props.items).map(key => <Item key={key} details={this.props.items[key]} />)}
       </div>
 
     )
