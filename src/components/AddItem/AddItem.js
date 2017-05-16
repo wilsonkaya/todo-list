@@ -1,4 +1,5 @@
 import React from 'react'
+import './AddItem.css'
 
 class AddItem extends React.Component {
   constructor(){
@@ -19,7 +20,7 @@ createItem(event){
 
 render(){
   return (
-    <div>
+    <div className='inputForm'>
       <form ref={(input)=> {this.itemForm = input}} onSubmit={(e) => {this.createItem(e)}}>
         <input ref={(input) => this.name = input} type="text"/>
         <input ref={(input) => this.time = input} type="text"/>
