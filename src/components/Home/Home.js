@@ -11,9 +11,56 @@ class Home extends React.Component {
     super(props)
     this.addToDo = this.addToDo.bind(this)
     this.removeItem = this.removeItem.bind(this)
+    this.renderLogin = this.renderLogin.bind(this)
+    this.authenticate = this.authenticate.bind(this)
+    this.authHandler = this.authHandler.bind(this)
     this.state={
-      items: {}
+      items: {},
+      uid: null,
+      owner: null
     }
+  }
+
+  authenticate(provider){
+    base.authWithOAuthPopup(provider, this.authHandler)
+  }
+
+  authHandler(err, authData){
+  console.log(authData)
+  if(err){
+    console.log(err)
+    return
+  }
+  //Get the store info ref helps us to get a specific part of the database
+  const storeRef = base.database().ref(this.props.storeId)
+
+  console.log(this.props.storeId)
+
+//it will get the data once, snapshot is from firebase
+  storeRef.once('value', (snapshot)=>{
+    const data = snapshot.val() || {}
+
+    if(!data.owner){
+      storeRef.set({
+        owner:authData.user.uid
+      })
+    }
+    this.setState({
+      uid: authData.user.uid,
+      owner: data.owner || authData.user.uid
+    })
+  })
+}
+
+
+  renderLogin(){
+    return(
+      <nav className="login">
+        <h2>Log In</h2>
+        <p>Sign in to manage your stores Inventory</p>
+        <button className="facebook" onClick={()=> this.authenticate('facebook')}>Login wiht Facebook</button>
+      </nav>
+    )
   }
 
   componentWillMount(){
@@ -42,6 +89,20 @@ class Home extends React.Component {
   }
 
   render() {
+    //this is for checking if user loged in
+  if(!this.state.uid){
+    return(
+      <div>{this.renderLogin()}</div>
+    )
+  }
+  //this is for checking if user is the owner
+  if(this.state.uid !== this.state.owner){
+    return(
+      <div>
+        <p>Sorry you are not the owner of this store</p>
+      </div>
+    )
+  }
     return (
       <div className="App">
         <AddItem addToDo={this.addToDo}/>
