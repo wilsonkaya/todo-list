@@ -10,6 +10,7 @@ class Home extends React.Component {
   constructor(props){
     super(props)
     this.addToDo = this.addToDo.bind(this)
+    this.removeItem = this.removeItem.bind(this)
     this.state={
       items: {}
     }
@@ -22,15 +23,17 @@ class Home extends React.Component {
      this.setState({items})
   }
 
-  // componentWillMount(){
-  //   this.ref = this.syncState()
-  // }
+  removeItem(index){
+    const items = {...this.state.items}
+
+    console.log(items[index])
+  }
 
   render() {
     return (
       <div className="App">
         <AddItem addToDo={this.addToDo}/>
-        <TodoList items={this.state.items} />
+        <TodoList items={this.state.items} removeItem={this.removeItem}/>
       </div>
     )
   }

@@ -2,12 +2,13 @@ import React from 'react'
 
 class Item extends React.Component{
   render(){
-    const {details} = this.props
+    const {details, index} = this.props
     return(
-      <p>
+      <div>
       <h2>{details.name}</h2>
       <h2>{details.time}</h2>
-      </p>
+      <button onClick={() => this.props.removeItem(index)}>delete</button>
+      </div>
     )
   }
 }
