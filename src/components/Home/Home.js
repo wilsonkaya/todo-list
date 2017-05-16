@@ -7,6 +7,7 @@ import base from '../../base'
 
 window.id = 0
 class Home extends React.Component {
+
   constructor(props){
     super(props)
     this.addToDo = this.addToDo.bind(this)
@@ -16,6 +17,18 @@ class Home extends React.Component {
     }
   }
 
+  componentWillMount(){
+    this.ref = base.syncState("list",
+    {
+      context: this,
+      state: 'items'
+    })
+  }
+
+  componentWillUnmount(){
+    base.removeBinding(this.ref)
+  }
+
   addToDo(item){
      const items = {...this.state.items}
      const timeStamp = Date.now()
@@ -23,10 +36,10 @@ class Home extends React.Component {
      this.setState({items})
   }
 
-  removeItem(index){
+  removeItem(key){
     const items = {...this.state.items}
-
-    console.log(items[index])
+    items[key] = null
+    this.setState({items})
   }
 
   render() {
